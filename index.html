@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>*~*~* MYLINUX *~*~*</title>
+<style>
+  body {
+    background-color: #003366;
+    background-image: repeating-linear-gradient(45deg, #003366 0px, #003366 20px, #00264d 20px, #00264d 40px);
+    color: #00FF00;
+    font-family: "Times New Roman", Times, serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  #wrapper {
+    max-width: 780px;
+    margin: 10px auto;
+    background-color: #000000;
+    border: 4px double #FFFF00;
+    padding: 8px;
+  }
+
+  #header {
+    text-align: center;
+    background: #000080;
+    border: 2px solid #00FFFF;
+    padding: 6px;
+    position: relative;
+  }
+
+  #logo-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  #logo-holder img {
+    display: block;
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+  }
+
+  #header h1 {
+    color: #FFFF00;
+    font-family: "Comic Sans MS", cursive;
+    font-size: 32px;
+    text-shadow: 2px 2px #FF0000;
+    margin: 4px 0;
+  }
+
+  #lang-switch {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    font-family: "Comic Sans MS", cursive;
+    font-size: 12px;
+  }
+  #lang-switch button {
+    background: #C0C0C0;
+    border: 2px outset #FFFFFF;
+    color: #000080;
+    font-weight: bold;
+    font-family: "Comic Sans MS", cursive;
+    padding: 3px 8px;
+    cursor: pointer;
+  }
+  #lang-switch button:active { border-style: inset; }
+  #lang-switch button.active-lang { background: #FFFF66; color: #660000; }
+
+  marquee {
+    background: #000000;
+    color: #FF00FF;
+    font-weight: bold;
+    border: 1px dashed #00FF00;
+    padding: 3px;
+    font-family: "Comic Sans MS", cursive;
+  }
+
+  .blink { animation: blinker 1s step-start infinite; color: #FF0000; font-weight: bold; }
+  @keyframes blinker { 50% { opacity: 0; } }
+
+  .navbar {
+    background: #C0C0C0;
+    color: #000080;
+    text-align: center;
+    font-family: "Comic Sans MS", cursive;
+    font-size: 12px;
+    padding: 4px;
+    border: 2px outset #FFFFFF;
+    margin-top: 6px;
+  }
+  .navbar a { color: #000080; margin: 0 5px; text-decoration: none; font-weight: bold; }
+  .navbar a:hover { color: #FF0000; text-decoration: underline; }
+
+  hr.retro {
+    border: none;
+    height: 4px;
+    background: repeating-linear-gradient(90deg, #FF0000, #FF0000 10px, #FFFF00 10px, #FFFF00 20px, #00FF00 20px, #00FF00 30px);
+  }
+
+  .section {
+    background: #001a33;
+    border: 3px ridge #C0C0C0;
+    margin-top: 12px;
+    padding: 8px 12px;
+  }
+  .section h2 {
+    background: linear-gradient(#4169E1, #000080);
+    color: #FFFF00;
+    font-family: "Comic Sans MS", cursive;
+    font-size: 17px;
+    margin: -8px -12px 8px -12px;
+    padding: 6px 10px;
+    border-bottom: 2px solid #00FFFF;
+  }
+  .section p, .section li {
+    font-size: 13px;
+    color: #E0FFE0;
+    line-height: 1.5;
+  }
+  .section ul { margin: 4px 0; padding-left: 20px; }
+
+  table.distros {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table.distros th {
+    background: #660000;
+    color: #FFFF66;
+    font-family: "Comic Sans MS", cursive;
+    padding: 4px;
+    border: 1px solid #FFCC00;
+  }
+  table.distros td {
+    border: 1px solid #004080;
+    padding: 4px 6px;
+    color: #E0FFE0;
+  }
+  table.distros tr:nth-child(even) td { background: #001229; }
+  table.distros td.dname { color: #FFCC00; font-weight: bold; }
+
+  .genbox {
+    background: #000;
+    border: 2px dashed #00FF00;
+    padding: 8px;
+    font-size: 13px;
+  }
+  .genbox label { display: block; margin: 4px 0; color: #99FF99; }
+  .genbox select {
+    background: #C0C0C0;
+    border: 2px inset #808080;
+    font-family: "Comic Sans MS", cursive;
+    font-size: 12px;
+  }
+  .genbox button {
+    margin-top: 8px;
+    background: #FFCC00;
+    border: 3px outset #FFFF99;
+    color: #660000;
+    font-family: "Comic Sans MS", cursive;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 6px 14px;
+    cursor: pointer;
+  }
+  .genbox button:active { border-style: inset; }
+
+  #gen-result {
+    display: none;
+    margin-top: 10px;
+    background: #000000;
+    border: 3px double #FF0000;
+    padding: 8px;
+    color: #00FF00;
+    font-family: "Courier New", monospace;
+    font-size: 13px;
+  }
+  #gen-result .title {
+    color: #FFFF00;
+    font-weight: bold;
+    animation: blinker 1s step-start infinite;
+  }
+
+  #stats {
+    margin-top: 10px;
+    background: #000000;
+    border: 2px dotted #00FF00;
+    padding: 6px;
+    font-size: 12px;
+    text-align: center;
+    color: #00CCFF;
+  }
+  #counter {
+    background: #000;
+    color: #0F0;
+    font-family: "Courier New", monospace;
+    letter-spacing: 3px;
+    border: 2px inset #808080;
+    padding: 3px 8px;
+    display: inline-block;
+    font-size: 16px;
+  }
+
+  .banner-row { text-align: center; margin-top: 8px; }
+  .banner {
+    display: inline-block;
+    width: 88px;
+    height: 31px;
+    background: repeating-linear-gradient(45deg,#FF0000,#FF0000 5px,#FFFF00 5px,#FFFF00 10px);
+    color: #000;
+    font-size: 9px;
+    font-weight: bold;
+    line-height: 31px;
+    border: 1px solid #000;
+    margin: 2px;
+  }
+
+  #footer {
+    text-align: center;
+    font-size: 11px;
+    color: #808080;
+    margin-top: 10px;
+    padding: 6px;
+    border-top: 1px dashed #444;
+  }
+
+  /* ===== COMMENTS ===== */
+  #comment-form-top {
+    background: #000;
+    border: 2px dashed #00FF00;
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+  #comment-form-top input[type=text],
+  .reply-form input[type=text] {
+    background: #001a33;
+    border: 2px inset #808080;
+    color: #FFFF66;
+    font-family: "Comic Sans MS", cursive;
+    font-size: 12px;
+    padding: 3px;
+    width: 200px;
+    margin-bottom: 4px;
+  }
+  #comment-form-top textarea,
+  .reply-form textarea {
+    background: #001a33;
+    border: 2px inset #808080;
+    color: #E0FFE0;
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 4px;
+    margin-bottom: 4px;
+    resize: vertical;
+  }
+  #comment-form-top button,
+  .reply-form button,
+  .reply-toggle {
+    background: #FFCC00;
+    border: 3px outset #FFFF99;
+    color: #660000;
+    font-family: "Comic Sans MS", cursive;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 4px 10px;
+    cursor: pointer;
+  }
+  #comment-form-top button:active,
+  .reply-form button:active { border-style: inset; }
+
+  .reply-toggle {
+    background: #C0C0C0;
+    border: 2px outset #FFFFFF;
+    color: #000080;
+    font-size: 11px;
+    padding: 2px 8px;
+    margin-top: 4px;
+  }
+
+  #comments-list { margin-top: 10px; }
+  .comment-box {
+    background: #001a33;
+    border: 2px solid #004080;
+    border-left: 4px solid #FFCC00;
+    padding: 6px 8px;
+    margin-bottom: 8px;
+  }
+  .comment-box .meta {
+    font-family: "Comic Sans MS", cursive;
+    color: #FFCC00;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .comment-box .meta .time {
+    color: #99CCFF;
+    font-weight: normal;
+    font-size: 10px;
+    margin-left: 6px;
+  }
+  .comment-box .msg {
+    color: #E0FFE0;
+    font-size: 13px;
+    margin: 4px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .comment-children {
+    margin-left: 22px;
+    border-left: 1px dotted #00FF00;
+    padding-left: 10px;
+  }
+  .reply-form {
+    margin-top: 6px;
+    background: #000;
+    border: 1px dashed #00FFFF;
+    padding: 6px;
+    display: none;
+  }
+  .empty-notice {
+    color: #808080;
+    font-size: 12px;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<div id="wrapper">
+
+  <div id="header">
+    <div id="lang-switch">
+      <button id="btn-en" onclick="setLang('en')">EN</button>
+      <button id="btn-ru" onclick="setLang('ru')">RU</button>
+    </div>
+
+    <div id="logo-row">
+      <div id="logo-holder">
+        <img id="tux-logo" src="https://freepngimg.com/thumb/tux/71669-tux-enterprise-linux-hat-red-penguin.png" alt="Tux the Linux penguin">
+      </div>
+      <h1>MYLINUX</h1>
+    </div>
+
+    <div class="i18n" data-en="[ Everything about Linux in one place ]" data-ru="[ Всё про Linux в одном месте ]">[ Everything about Linux in one place ]</div>
+
+    <marquee scrollamount="4">
+      <span class="i18n"
+        data-en="*** Welcome to MYLINUX *** Kernel 2.4 is finally stable *** Don't forget to compile XFree86 *** Long live GNU! ***"
+        data-ru="*** Добро пожаловать на MYLINUX *** Ядро 2.4 уже стабильно! *** Не забудьте скомпилировать XFree86 *** Слава GNU! ***">
+        *** Welcome to MYLINUX *** Kernel 2.4 is finally stable *** Don't forget to compile XFree86 *** Long live GNU! ***
+      </span>
+    </marquee>
+
+    <div class="blink i18n" data-en="DOWNLOAD RED HAT 7.2 ON CD — ASK IN THE GUESTBOOK!" data-ru="СКАЧАТЬ RED HAT 7.2 НА CD — СПРОСИ В ГОСТЕВОЙ!">
+      DOWNLOAD RED HAT 7.2 ON CD — ASK IN THE GUESTBOOK!
+    </div>
+  </div>
+
+  <div class="navbar">
+    [ <a href="#what">What is Linux</a> ]
+    [ <a href="#who">Who made it</a> ]
+    [ <a href="#install">Install</a> ]
+    [ <a href="#fix">Fix Errors</a> ]
+    [ <a href="#distros">Distros</a> ]
+    [ <a href="#generator">Distro Generator</a> ]
+    [ <a href="#comments">Comments</a> ]
+  </div>
+
+  <hr class="retro">
+
+  <!-- WHAT IS LINUX -->
+  <div class="section" id="what">
+    <h2 class="i18n" data-en=":: WHAT IS LINUX? ::" data-ru=":: ЧТО ТАКОЕ LINUX? ::">:: WHAT IS LINUX? ::</h2>
+    <p class="i18n"
+      data-en="Linux is a free, open-source operating system kernel. Anyone can look at its code, change it, and share it. On top of that kernel, people build full operating systems called 'distributions' — you install one of those, not 'Linux' by itself."
+      data-ru="Linux — это бесплатное ядро операционной системы с открытым исходным кодом. Любой может посмотреть его код, изменить его и поделиться им. На основе этого ядра собирают полноценные операционные системы — «дистрибутивы». Устанавливаешь именно дистрибутив, а не «просто Linux».">
+      Linux is a free, open-source operating system kernel. Anyone can look at its code, change it, and share it. On top of that kernel, people build full operating systems called "distributions" — you install one of those, not "Linux" by itself.
+    </p>
+  </div>
+
+  <!-- WHO CREATED LINUX -->
+  <div class="section" id="who">
+    <h2 class="i18n" data-en=":: WHO CREATED LINUX? ::" data-ru=":: КТО СОЗДАЛ LINUX? ::">:: WHO CREATED LINUX? ::</h2>
+    <p class="i18n"
+      data-en="A Finnish student named Linus Torvalds started Linux in 1991 as a hobby project while studying at the University of Helsinki. He posted it online and asked for help — programmers around the world jumped in, and it grew into what powers servers, phones (Android), and countless devices today."
+      data-ru="Финский студент Линус Торвальдс начал разработку Linux в 1991 году как хобби-проект во время учёбы в Хельсинкском университете. Он выложил его в сеть и попросил помощи — программисты со всего мира подключились, и проект вырос до системы, на которой сегодня работают серверы, телефоны (Android) и множество других устройств.">
+      A Finnish student named Linus Torvalds started Linux in 1991 as a hobby project while studying at the University of Helsinki. He posted it online and asked for help — programmers around the world jumped in, and it grew into what powers servers, phones (Android), and countless devices today.
+    </p>
+  </div>
+
+  <!-- INSTALL -->
+  <div class="section" id="install">
+    <h2 class="i18n" data-en=":: HOW TO INSTALL LINUX ::" data-ru=":: КАК УСТАНОВИТЬ LINUX ::">:: HOW TO INSTALL LINUX ::</h2>
+    <ul>
+      <li class="i18n" data-en="Pick a distro (see the list below — Ubuntu or Mint are easiest for beginners)." data-ru="Выбери дистрибутив (см. список ниже — Ubuntu или Mint проще всего для новичков).">Pick a distro (see the list below — Ubuntu or Mint are easiest for beginners).</li>
+      <li class="i18n" data-en="Download the .iso file from the distro's official website." data-ru="Скачай файл .iso с официального сайта дистрибутива.">Download the .iso file from the distro's official website.</li>
+      <li class="i18n" data-en="Write it to a USB stick with a tool like Rufus or Balena Etcher." data-ru="Запиши его на флешку с помощью Rufus или Balena Etcher.">Write it to a USB stick with a tool like Rufus or Balena Etcher.</li>
+      <li class="i18n" data-en="Boot from the USB (usually F12 / F2 / Del at startup) and follow the installer." data-ru="Загрузись с флешки (обычно F12 / F2 / Del при старте) и следуй шагам установщика.">Boot from the USB (usually F12 / F2 / Del at startup) and follow the installer.</li>
+      <li class="i18n" data-en="Try 'Try without installing' first if you're not sure yet!" data-ru="Сначала попробуй режим «Запустить без установки», если не уверен!">Try "Try without installing" first if you're not sure yet!</li>
+    </ul>
+  </div>
+
+  <!-- FIX ERRORS -->
+  <div class="section" id="fix">
+    <h2 class="i18n" data-en=":: HOW TO FIX COMMON ERRORS ::" data-ru=":: КАК ИСПРАВИТЬ ОШИБКИ ::">:: HOW TO FIX COMMON ERRORS ::</h2>
+    <ul>
+      <li class="i18n" data-en="Black screen on boot: try adding 'nomodeset' to boot options." data-ru="Чёрный экран при загрузке: попробуй добавить 'nomodeset' в параметры загрузки.">Black screen on boot: try adding "nomodeset" to boot options.</li>
+      <li class="i18n" data-en="No Wi-Fi: check if your card needs proprietary drivers (common on Broadcom cards)." data-ru="Нет Wi-Fi: проверь, нужны ли проприетарные драйвера (частый случай для карт Broadcom).">No Wi-Fi: check if your card needs proprietary drivers (common on Broadcom cards).</li>
+      <li class="i18n" data-en="'Command not found': you probably need to install that program first with your package manager." data-ru="«Команда не найдена»: скорее всего нужно установить программу через менеджер пакетов.">"Command not found": you probably need to install that program first with your package manager.</li>
+      <li class="i18n" data-en="System won't boot after update: boot into an older kernel from the GRUB menu." data-ru="Система не грузится после обновления: загрузись со старым ядром через меню GRUB.">System won't boot after update: boot into an older kernel from the GRUB menu.</li>
+      <li class="i18n" data-en="When in doubt: read the error message carefully and search it — someone else has hit it too." data-ru="Если не знаешь, что делать: внимательно прочитай текст ошибки и загугли его — кто-то уже с этим сталкивался.">When in doubt: read the error message carefully and search it — someone else has hit it too.</li>
+    </ul>
+  </div>
+
+  <!-- DISTROS -->
+  <div class="section" id="distros">
+    <h2 class="i18n" data-en=":: ALL THE DISTROS ::" data-ru=":: ВСЕ ДИСТРИБУТИВЫ ::">:: ALL THE DISTROS ::</h2>
+    <table class="distros">
+      <tr>
+        <th class="i18n" data-en="Distro" data-ru="Дистрибутив">Distro</th>
+        <th class="i18n" data-en="Good for" data-ru="Подходит для">Good for</th>
+      </tr>
+      <tr><td class="dname">Ubuntu</td><td class="i18n" data-en="beginners, general use" data-ru="новичков, повседневных задач">beginners, general use</td></tr>
+      <tr><td class="dname">Linux Mint</td><td class="i18n" data-en="beginners coming from Windows" data-ru="новичков, пришедших с Windows">beginners coming from Windows</td></tr>
+      <tr><td class="dname">Debian</td><td class="i18n" data-en="stability, servers" data-ru="стабильности, серверов">stability, servers</td></tr>
+      <tr><td class="dname">Fedora</td><td class="i18n" data-en="newest software, developers" data-ru="самого нового софта, разработчиков">newest software, developers</td></tr>
+      <tr><td class="dname">Arch Linux</td><td class="i18n" data-en="full control, learning Linux deeply" data-ru="полного контроля, глубокого изучения Linux">full control, learning Linux deeply</td></tr>
+      <tr><td class="dname">Manjaro</td><td class="i18n" data-en="Arch power with less hassle" data-ru="мощи Arch без лишних хлопот">Arch power with less hassle</td></tr>
+      <tr><td class="dname">openSUSE</td><td class="i18n" data-en="business & desktop mix" data-ru="сочетания рабочих станций и бизнес-задач">business & desktop mix</td></tr>
+      <tr><td class="dname">Slackware</td><td class="i18n" data-en="old-school purists" data-ru="олдскульных пуристов">old-school purists</td></tr>
+      <tr><td class="dname">Gentoo</td><td class="i18n" data-en="compiling everything yourself" data-ru="самостоятельной компиляции всего">compiling everything yourself</td></tr>
+      <tr><td class="dname">Kali Linux</td><td class="i18n" data-en="security & penetration testing" data-ru="безопасности и пентеста">security & penetration testing</td></tr>
+      <tr><td class="dname">Puppy Linux</td><td class="i18n" data-en="very old / weak hardware" data-ru="очень старого / слабого железа">very old / weak hardware</td></tr>
+    </table>
+  </div>
+
+  <!-- DISTRO GENERATOR -->
+  <div class="section" id="generator">
+    <h2 class="i18n" data-en=":: DISTRO-O-MATIC 2000 GENERATOR ::" data-ru=":: ГЕНЕРАТОР ДИСТРИБУТИВА 2000 ::">:: DISTRO-O-MATIC 2000 GENERATOR ::</h2>
+    <p class="i18n" data-en="Answer 3 questions and the machine will tell you which distro to install!" data-ru="Ответь на 3 вопроса, и машина скажет, какой дистрибутив тебе ставить!">Answer 3 questions and the machine will tell you which distro to install!</p>
+
+    <div class="genbox">
+      <label class="i18n" data-en="1. Your experience with Linux:" data-ru="1. Твой опыт с Linux:">1. Your experience with Linux:</label>
+      <select id="q1">
+        <option value="beginner" class="i18n" data-en="Total beginner" data-ru="Полный новичок">Total beginner</option>
+        <option value="expert" class="i18n" data-en="I know my way around" data-ru="Разбираюсь неплохо">I know my way around</option>
+      </select>
+
+      <label class="i18n" data-en="2. What matters more to you?" data-ru="2. Что для тебя важнее?">2. What matters more to you?</label>
+      <select id="q2">
+        <option value="stable" class="i18n" data-en="Stability, it just works" data-ru="Стабильность, чтобы просто работало">Stability, it just works</option>
+        <option value="new" class="i18n" data-en="Newest software available" data-ru="Самый свежий софт">Newest software available</option>
+      </select>
+
+      <label class="i18n" data-en="3. Your computer is:" data-ru="3. Твой компьютер:">3. Your computer is:</label>
+      <select id="q3">
+        <option value="modern" class="i18n" data-en="Modern / decent specs" data-ru="Современный / нормальные характеристики">Modern / decent specs</option>
+        <option value="old" class="i18n" data-en="Old / weak hardware" data-ru="Старый / слабое железо">Old / weak hardware</option>
+      </select>
+
+      <button onclick="generateDistro()" class="i18n" data-en="GENERATE!" data-ru="СГЕНЕРИРОВАТЬ!">GENERATE!</button>
+
+      <div id="gen-result"></div>
+    </div>
+  </div>
+
+  <!-- COMMENTS -->
+  <div class="section" id="comments">
+    <h2 class="i18n" data-en=":: LEAVE A COMMENT ::" data-ru=":: ОСТАВЬ КОММЕНТАРИЙ ::">:: LEAVE A COMMENT ::</h2>
+    <p class="i18n"
+      data-en="Talk about distros, ask questions, argue about init systems — go wild."
+      data-ru="Обсуждай дистрибутивы, задавай вопросы, спорь про init-системы — не стесняйся.">
+      Talk about distros, ask questions, argue about init systems — go wild.
+    </p>
+    <div id="comment-form-top">
+      <div class="i18n" data-en="Your nickname:" data-ru="Твой ник:">Your nickname:</div>
+      <input type="text" id="top-nick" maxlength="40" placeholder="tux_fan_2001">
+      <div class="i18n" data-en="Your message:" data-ru="Твоё сообщение:">Your message:</div>
+      <textarea id="top-msg" rows="3" maxlength="1000" placeholder="..."></textarea>
+      <br>
+      <button onclick="postComment(null, 'top-nick', 'top-msg')" class="i18n" data-en="POST COMMENT" data-ru="ОТПРАВИТЬ">POST COMMENT</button>
+    </div>
+
+    <div id="comments-list">
+      <div class="empty-notice i18n" data-en="Loading comments..." data-ru="Загрузка комментариев...">Loading comments...</div>
+    </div>
+  </div>
+
+  <div class="banner-row">
+    <div class="banner">LINUX<br>POWERED</div>
+    <div class="banner" style="background:repeating-linear-gradient(45deg,#00FF00,#00FF00 5px,#000 5px,#000 10px);">BEST VIEWED<br>800x600</div>
+    <div class="banner" style="background:repeating-linear-gradient(45deg,#00FFFF,#00FFFF 5px,#FF00FF 5px,#FF00FF 10px);">NETSCAPE<br>NOW!</div>
+  </div>
+
+  <div id="stats">
+    <span class="i18n" data-en="You are visitor number:" data-ru="Вы посетитель номер:">You are visitor number:</span><br>
+    <span id="counter">003117</span>
+  </div>
+
+  <div id="footer">
+    <span class="i18n"
+      data-en="© 2001-2002 MYLINUX. All rights reserved (though this is GNU/Linux, so feel free to copy it anyway)."
+      data-ru="© 2001-2002 MYLINUX. Все права защищены (хотя это же GNU/Linux, копируйте на здоровье).">
+      © 2001-2002 MYLINUX. All rights reserved (though this is GNU/Linux, so feel free to copy it anyway).
+    </span><br>
+    <span class="i18n" data-en="Site made in pure HTML using Notepad." data-ru="Сайт сделан на чистом HTML в блокноте.">Site made in pure HTML using Notepad.</span>
+  </div>
+
+</div>
+
+<script>
+  var i18nElements = document.querySelectorAll('.i18n');
+
+  function setLang(lang) {
+    i18nElements.forEach(function(el){
+      var val = el.getAttribute('data-' + lang);
+      if (val !== null) el.innerHTML = val;
+    });
+    document.documentElement.lang = lang;
+    document.getElementById('btn-en').classList.toggle('active-lang', lang === 'en');
+    document.getElementById('btn-ru').classList.toggle('active-lang', lang === 'ru');
+    try { localStorage.setItem('mylinux_lang', lang); } catch(e) {}
+  }
+
+  // counter
+  (function(){
+    var el = document.getElementById('counter');
+    var base = 3117;
+    setTimeout(function(){
+      base += Math.floor(Math.random()*3)+1;
+      el.textContent = String(base).padStart(6,'0');
+    }, 2000);
+  })();
+
+  // distro generator logic
+  function generateDistro() {
+    var exp = document.getElementById('q1').value;
+    var pri = document.getElementById('q2').value;
+    var hw = document.getElementById('q3').value;
+
+    var distro, why_en, why_ru;
+
+    if (hw === 'old') {
+      distro = 'Puppy Linux';
+      why_en = 'Your hardware is old, so a super lightweight distro is the way to go.';
+      why_ru = 'Твоё железо старое, поэтому лучше всего лёгкий дистрибутив.';
+    } else if (exp === 'beginner' && pri === 'stable') {
+      distro = 'Linux Mint';
+      why_en = 'Beginner-friendly and rock solid — a classic first distro.';
+      why_ru = 'Дружелюбен к новичкам и очень стабилен — классика для первого раза.';
+    } else if (exp === 'beginner' && pri === 'new') {
+      distro = 'Ubuntu';
+      why_en = 'Easy to use but still gets fresh software regularly.';
+      why_ru = 'Прост в использовании, но при этом регулярно получает свежий софт.';
+    } else if (exp === 'expert' && pri === 'stable') {
+      distro = 'Debian';
+      why_en = 'The gold standard of stability for people who know what they are doing.';
+      why_ru = 'Золотой стандарт стабильности для тех, кто знает, что делает.';
+    } else {
+      distro = 'Arch Linux';
+      why_en = 'Bleeding-edge packages and total control, built by you piece by piece.';
+      why_ru = 'Самые свежие пакеты и полный контроль — собираешь систему по кусочкам сам.';
+    }
+
+    var box = document.getElementById('gen-result');
+    box.style.display = 'block';
+    box.innerHTML =
+      '<div class="title i18n" data-en="&gt;&gt;&gt; RECOMMENDED DISTRO: ' + distro + ' &lt;&lt;&lt;" data-ru="&gt;&gt;&gt; РЕКОМЕНДУЕМЫЙ ДИСТРИБУТИВ: ' + distro + ' &lt;&lt;&lt;">&gt;&gt;&gt; RECOMMENDED DISTRO: ' + distro + ' &lt;&lt;&lt;</div>' +
+      '<div class="i18n" data-en="' + why_en + '" data-ru="' + why_ru + '">' + why_en + '</div>';
+
+    // re-apply current language to the newly injected nodes
+    var currentLang = document.getElementById('btn-ru').classList.contains('active-lang') ? 'ru' : 'en';
+    box.querySelectorAll('.i18n').forEach(function(el){
+      var val = el.getAttribute('data-' + currentLang);
+      if (val !== null) el.innerHTML = val;
+    });
+  }
+
+  // default language: English
+  setLang('en');
+</script>
+
+<!-- ===== FIREBASE COMMENTS ===== -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+  var firebaseConfig = {
+    apiKey: "AIzaSyCdF1SMuKFzVxazNSquvSfFCiBbN-vXxI0",
+    authDomain: "mylinux-8ace2.firebaseapp.com",
+    projectId: "mylinux-8ace2",
+    storageBucket: "mylinux-8ace2.firebasestorage.app",
+    messagingSenderId: "524542258558",
+    appId: "1:524542258558:web:58e1f80b8c275e6e47d72f"
+  };
+
+  var PAGE_ID = "mylinux-home"; // если сделаешь несколько страниц с комментариями - дай каждой свой id
+
+  var db = null;
+  try {
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+  } catch (e) {
+    console.error("Firebase init failed:", e);
+  }
+
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function formatTime(ts) {
+    if (!ts) return "";
+    var d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleString();
+  }
+
+  function postComment(parentId, nickFieldId, msgFieldId) {
+    if (!db) {
+      alert("Comments are not configured yet.");
+      return;
+    }
+    var nick = document.getElementById(nickFieldId).value.trim();
+    var msg = document.getElementById(msgFieldId).value.trim();
+    if (!nick || !msg) {
+      alert("Please fill in both nickname and message.");
+      return;
+    }
+    db.collection("comments").add({
+      pageId: PAGE_ID,
+      parentId: parentId,
+      nickname: nick.slice(0, 40),
+      message: msg.slice(0, 1000),
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function(){
+      document.getElementById(nickFieldId).value = "";
+      document.getElementById(msgFieldId).value = "";
+      if (parentId) {
+        var form = document.getElementById('reply-form-' + parentId);
+        if (form) form.style.display = 'none';
+      }
+    }).catch(function(err){
+      alert("Error posting comment: " + err.message);
+    });
+  }
+
+  function toggleReplyForm(commentId) {
+    var form = document.getElementById('reply-form-' + commentId);
+    if (form) {
+      form.style.display = (form.style.display === 'block') ? 'none' : 'block';
+    }
+  }
+
+  function buildCommentNode(comment, allComments) {
+    var wrap = document.createElement('div');
+    wrap.className = 'comment-box';
+
+    var meta = document.createElement('div');
+    meta.className = 'meta';
+    meta.innerHTML = escapeHtml(comment.nickname) + ' <span class="time">' + formatTime(comment.timestamp) + '</span>';
+    wrap.appendChild(meta);
+
+    var msg = document.createElement('div');
+    msg.className = 'msg';
+    msg.textContent = comment.message;
+    wrap.appendChild(msg);
+
+    var replyBtn = document.createElement('button');
+    replyBtn.className = 'reply-toggle';
+    replyBtn.textContent = 'Reply';
+    replyBtn.onclick = function(){ toggleReplyForm(comment.id); };
+    wrap.appendChild(replyBtn);
+
+    var replyForm = document.createElement('div');
+    replyForm.className = 'reply-form';
+    replyForm.id = 'reply-form-' + comment.id;
+    replyForm.innerHTML =
+      '<input type="text" id="nick-' + comment.id + '" maxlength="40" placeholder="your nickname"><br>' +
+      '<textarea id="msg-' + comment.id + '" rows="2" maxlength="1000" placeholder="your reply..."></textarea><br>' +
+      '<button onclick="postComment(\'' + comment.id + '\', \'nick-' + comment.id + '\', \'msg-' + comment.id + '\')">Reply</button>';
+    wrap.appendChild(replyForm);
+
+    var children = allComments.filter(function(c){ return c.parentId === comment.id; });
+    if (children.length > 0) {
+      var childWrap = document.createElement('div');
+      childWrap.className = 'comment-children';
+      children.forEach(function(child){
+        childWrap.appendChild(buildCommentNode(child, allComments));
+      });
+      wrap.appendChild(childWrap);
+    }
+
+    return wrap;
+  }
+
+  function renderComments(allComments) {
+    var list = document.getElementById('comments-list');
+    list.innerHTML = '';
+    var topLevel = allComments.filter(function(c){ return !c.parentId; });
+    if (topLevel.length === 0) {
+      var empty = document.createElement('div');
+      empty.className = 'empty-notice';
+      empty.textContent = 'No comments yet. Be the first!';
+      list.appendChild(empty);
+      return;
+    }
+    topLevel.forEach(function(c){
+      list.appendChild(buildCommentNode(c, allComments));
+    });
+  }
+
+  if (db) {
+    db.collection("comments")
+      .where("pageId", "==", PAGE_ID)
+      .orderBy("timestamp", "asc")
+      .onSnapshot(function(snapshot){
+        var all = [];
+        snapshot.forEach(function(doc){
+          var data = doc.data();
+          data.id = doc.id;
+          all.push(data);
+        });
+        renderComments(all);
+      }, function(err){
+        document.getElementById('comments-list').innerHTML =
+          '<div class="empty-notice">Could not load comments: ' + escapeHtml(err.message) + '</div>';
+      });
+  }
+</script>
+
+</body>
+</html>
