@@ -601,6 +601,12 @@
   var PAGE_ID = "mylinux-home"; // если сделаешь несколько страниц с комментариями - дай каждой свой id
 
   var db = null;
+  var myIp = null;
+
+  fetch('https://api.ipify.org?format=json')
+    .then(function(r){ return r.json(); })
+    .then(function(data){ myIp = data.ip; })
+    .catch(function(){ myIp = null; });
   try {
     firebase.initializeApp(firebaseConfig);
     db = firebase.firestore();
@@ -636,6 +642,7 @@
       parentId: parentId,
       nickname: nick.slice(0, 40),
       message: msg.slice(0, 1000),
+      ip: myIp,
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     }).then(function(){
       document.getElementById(nickFieldId).value = "";
@@ -654,6 +661,17 @@
     if (form) {
       form.style.display = (form.style.display === 'block') ? 'none' : 'block';
     }
+  }
+
+  function deleteComment(commentId, authorIp) {
+    if (!myIp || !authorIp || myIp !== authorIp) {
+      alert("You can only delete comments posted from your own IP address.");
+      return;
+    }
+    if (!confirm("Delete this comment?")) return;
+    db.collection("comments").doc(commentId).delete().catch(function(err){
+      alert("Error deleting comment: " + err.message);
+    });
   }
 
   function buildCommentNode(comment, allComments) {
@@ -675,6 +693,13 @@
     replyBtn.textContent = 'Reply';
     replyBtn.onclick = function(){ toggleReplyForm(comment.id); };
     wrap.appendChild(replyBtn);
+
+    var delBtn = document.createElement('button');
+    delBtn.className = 'reply-toggle';
+    delBtn.textContent = 'Delete';
+    delBtn.style.marginLeft = '4px';
+    delBtn.onclick = function(){ deleteComment(comment.id, comment.ip); };
+    wrap.appendChild(delBtn);
 
     var replyForm = document.createElement('div');
     replyForm.className = 'reply-form';
